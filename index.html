@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1> M-Pesa API</h1>
+
+<h3>Last transaction:</h3>
+<table id="latest">
+	<tr>
+		<th>ID</th>
+		<th>Date</th>
+		<th>Sender Name</th>
+		<th>Sender Number</th>
+		<th>Recieved Amount</th>
+		<th>New Balance</th>
+	</tr>
+	<tr>
+			<td>P5HG6XCY</td>
+			<td>23/05/2006</td>
+			<td>Motho Fela</td>
+			<td>+26651654321</td>
+			<td>20.00</td>
+			<td>47.40</td>
+		</tr>
+</table>
+
+
+<h3>All transactions:</h3>
+<table id="records">
+	<tr>
+		<th>ID</th>
+		<th>Date</th>
+		<th>Sender Name</th>
+		<th>Sender Number</th>
+		<th>Recieved Amount</th>
+		<th>New Balance</th>
+	</tr>
+
+</table>
+
+<script src="https://www.gstatic.com/firebasejs/8.9.0/firebase.js"></script>
+<script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBit42FHdaMWW4gNJnv5KRyEmLfJH-03eM",
+  authDomain: "mpesa-api-a2c5a.firebaseapp.com",
+  databaseURL: "https://mpesa-api-a2c5a-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "mpesa-api-a2c5a",
+  storageBucket: "mpesa-api-a2c5a.appspot.com",
+  messagingSenderId: "502592666798",
+  appId: "1:502592666798:web:7cc43b36ca2289cb27013f"
+};
+firebase.initializeApp(firebaseConfig)
+var db = firebase.database();
+
+
+
+  
+  function addEntry(id, date, sender, number, rec, new_balance){
+  	  entry = "<tr>";
+  	  entry += `<td>${id}</td>`
+  	  entry += `<td>${date}</td>`
+  	  entry += `<td>${sender}</td>`
+  	  entry += `<td>${number}</td>`
+  	  entry += `<td>${rec}</td>`
+  	  entry += `<td>${new_balance}</td>`
+  	  entry += "</tr>"
+  	  
+  	  return entry
+  	  
+  };
+  
+  records = document.getElementById("records")
+  
+
+  db.ref('transaction').once('value',   function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot.val();
+      
+      newData = addEntry(childData["id"], childData["date"], childData["sender_name"], childData["sender_num"], childData["rec"], childData["new_balance"]);
+      records.innerHTML += newData
+    });
+  });
+ 
+  
+  
+  
+</script>
+</body>
+</html>
