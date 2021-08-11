@@ -26,14 +26,6 @@
 		<th>Recieved Amount</th>
 		<th>New Balance</th>
 	</tr>
-	<tr>
-			<td>P5HG6XCY</td>
-			<td>23/05/2006</td>
-			<td>Motho Fela</td>
-			<td>+26651654321</td>
-			<td>20.00</td>
-			<td>47.40</td>
-		</tr>
 </table>
 
 
@@ -52,6 +44,9 @@
 
 <script src="https://www.gstatic.com/firebasejs/8.9.0/firebase.js"></script>
 <script>
+
+var first = new Boolean(true)
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBit42FHdaMWW4gNJnv5KRyEmLfJH-03eM",
@@ -83,6 +78,7 @@ var db = firebase.database();
   };
   
   records = document.getElementById("records")
+  latest = document.getElementById("latest")
   
 
   db.ref('transaction').once('value',   function(snapshot) {
@@ -91,6 +87,12 @@ var db = firebase.database();
       var childData = childSnapshot.val();
       
       newData = addEntry(childData["id"], childData["date"], childData["sender_name"], childData["sender_num"], childData["rec"], childData["new_balance"]);
+      
+      if (first == true){
+      latest.innerHTML += newData;
+      first = Boolean(false);
+      
+      }
       records.innerHTML += newData
     });
   });
